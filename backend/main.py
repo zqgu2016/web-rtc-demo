@@ -5,6 +5,7 @@ from aiortc import (
 )
 from aiortc.contrib.media import MediaPlayer
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 app = FastAPI()
@@ -22,7 +23,7 @@ class Answer(BaseModel):
     type: str
 
 
-@app.post("/offer")
+@app.post("/api/offer")
 async def create_offer(offer: Offer):
     offer = RTCSessionDescription(sdp=offer.sdp, type=offer.type)
     pc = RTCPeerConnection()
@@ -43,3 +44,5 @@ async def create_offer(offer: Offer):
     await pc.setLocalDescription(answer)
 
     return Answer(sdp=pc.localDescription.sdp, type=pc.localDescription.type)
+
+app.mount("/", StaticFiles(directory="../dist"), name="static")
