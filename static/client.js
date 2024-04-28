@@ -9,18 +9,15 @@ pc.ontrack = (evt) => {
 };
 
 async function start() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: true,
-        });
-        stream.getTracks().forEach((track) => pc.addTrack(track, stream));
-    } catch (err) {
-        console.error("无法获取摄像头或音响设备: " + err);
-    }
+    pc.addTransceiver('video', { direction: 'recvonly' });
+    pc.addTransceiver('audio', { direction: 'recvonly' });
 
     negotiate()
 };
+
+function stop() {
+    pc.close();
+}
 
 async function negotiate() {
     await pc.setLocalDescription(await pc.createOffer());
