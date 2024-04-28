@@ -22,31 +22,13 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-      
-      - name: Install Dependencies
-        run: npm install
-      
-      - name: Build Frontend
-        run: npm run build
-
-      - name: Set up Python version
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{env.PYTHON_VERSION}}
-
       - name: Create and start virtual environment
         run: |
           python -m venv venv
           source venv/bin/activate
-        working-directory: backend
 
       - name: Install dependencies
         run:  pip install -r requirements.txt
-        working-directory: backend
 
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
@@ -55,8 +37,8 @@ jobs:
         with:
           name: python-app
           path: |
-            backend
-            !backend/venv/
+            .
+            !venv/
 
   deploy:
     runs-on: ubuntu-latest
